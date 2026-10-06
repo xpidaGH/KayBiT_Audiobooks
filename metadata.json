@@ -1,0 +1,6 @@
+{
+  "name": "KayBiT_Audiobooks: Advanced Capstone Architecture & Lab",
+  "description": "Production-grade audio streaming, DRM encryption engines, distributed inventory concurrency ledgers, dynamic pricing ingestion, and embedded systems architectures for advanced computer science students.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
