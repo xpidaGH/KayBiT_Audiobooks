@@ -1,12 +1,15 @@
 import React from 'react';
-import { Headphones, BookOpen, Download, Globe, Layers, Cpu, Database, Zap, HardDrive } from 'lucide-react';
+import { Headphones, BookOpen, Download, Globe, Layers, Cpu, Database, Zap, HardDrive, Palette, Shield } from 'lucide-react';
 import { CapstoneId } from '../types';
+import { BrandLogo } from './brand/BrandLogo';
 
 interface NavbarProps {
   activeView: 'home' | 'player' | CapstoneId | 'matrix';
   onSelectView: (view: 'home' | 'player' | CapstoneId | 'matrix') => void;
   onOpenUserGuide: () => void;
   onOpenInstallation: () => void;
+  onOpenThemeSettings: () => void;
+  onOpenBrandAssets: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -14,29 +17,28 @@ export const Navbar: React.FC<NavbarProps> = ({
   onSelectView,
   onOpenUserGuide,
   onOpenInstallation,
+  onOpenThemeSettings,
+  onOpenBrandAssets,
 }) => {
   return (
     <header className="sticky top-0 z-40 w-full border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-        {/* Brand */}
-        <button
-          onClick={() => onSelectView('home')}
-          className="flex items-center gap-2.5 text-left group transition cursor-pointer"
-        >
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 to-amber-300 p-0.5 flex items-center justify-center shadow-lg shadow-amber-500/20 group-hover:scale-105 transition-transform">
-            <div className="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
-              <Headphones className="w-4 h-4 text-amber-400" />
-            </div>
-          </div>
-          <div>
-            <span className="font-extrabold text-sm sm:text-base text-white tracking-tight flex items-center gap-1.5">
-              KayBiT<span className="text-amber-400 font-mono">_Audiobooks</span>
-            </span>
-            <span className="text-[10px] text-slate-400 font-mono block -mt-1 hidden sm:block">
-              PDF Reader & Capstone Lab
-            </span>
-          </div>
-        </button>
+        {/* Brand with authentic KBT Cyber Spider Logo */}
+        <div className="flex items-center gap-3">
+          <BrandLogo
+            variant="web"
+            onClick={() => onSelectView('home')}
+            className="cursor-pointer"
+          />
+          <button
+            onClick={onOpenBrandAssets}
+            className="hidden md:inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono bg-lime-500/10 text-lime-400 border border-lime-500/20 hover:bg-lime-500/20 transition"
+            title="Inspect Desktop, Mobile, and Web Brand Logos from integration guide"
+          >
+            <Shield className="w-3 h-3" />
+            <span>Icons Hub</span>
+          </button>
+        </div>
 
         {/* Capstone Switcher Tabs */}
         <nav className="hidden lg:flex items-center gap-1 bg-slate-900/60 p-1 rounded-xl border border-slate-800/60 text-xs font-medium">
@@ -116,6 +118,17 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Action Buttons */}
         <div className="flex items-center gap-2">
+          {/* Theme Settings Button (Requested in Prompt) */}
+          <button
+            onClick={onOpenThemeSettings}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 font-semibold text-xs transition shadow-sm hover:border-amber-500/40"
+            title="Open Theme Settings to select from 5 UI theme variations"
+          >
+            <Palette className="w-3.5 h-3.5 text-amber-400" />
+            <span className="hidden sm:inline">Theme Settings</span>
+            <span className="sm:hidden">Theme</span>
+          </button>
+
           {/* User Guide Button (Requested in Prompt) */}
           <button
             onClick={onOpenUserGuide}
@@ -123,8 +136,9 @@ export const Navbar: React.FC<NavbarProps> = ({
             title="Open comprehensive User Guide in 22 languages with Text-to-Speech"
           >
             <BookOpen className="w-3.5 h-3.5 fill-current" />
-            <span>User Guide</span>
-            <span className="hidden sm:inline-block px-1.5 py-0.2 rounded-full text-[10px] bg-slate-950/20 text-slate-950 font-mono font-bold">
+            <span className="hidden md:inline">User Guide</span>
+            <span className="md:hidden">Guide</span>
+            <span className="hidden lg:inline-block px-1.5 py-0.2 rounded-full text-[10px] bg-slate-950/20 text-slate-950 font-mono font-bold">
               22 Langs
             </span>
           </button>

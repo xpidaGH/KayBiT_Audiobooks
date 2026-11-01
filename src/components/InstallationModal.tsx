@@ -7,7 +7,7 @@ interface InstallationModalProps {
 }
 
 export const InstallationModal: React.FC<InstallationModalProps> = ({ isOpen, onClose }) => {
-  const [activeTab, setActiveTab] = useState<'android' | 'ios' | 'windows' | 'macos' | 'pwa'>('android');
+  const [activeTab, setActiveTab] = useState<'android' | 'ios' | 'windows' | 'macos' | 'pwa' | 'github-actions'>('android');
   const [copiedSnippet, setCopiedSnippet] = useState<string | null>(null);
 
   if (!isOpen) return null;
@@ -20,7 +20,7 @@ export const InstallationModal: React.FC<InstallationModalProps> = ({ isOpen, on
 
   const handleDownloadDoc = () => {
     const markdownContent = `# KayBiT_Audiobooks: Native Cross-Platform Packaging Guide
-Refer to INSTALLATION.md in root directory for full CLI commands for Android APK/AAB, iOS IPA, Windows EXE/MSI, and macOS DMG.`;
+Refer to INSTALLATION.md and GitHub_Actions.md in root directory for full CLI commands for Android APK/AAB, iOS IPA, Windows EXE/MSI, and macOS DMG.`;
     const blob = new Blob([markdownContent], { type: 'text/markdown;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -40,9 +40,9 @@ Refer to INSTALLATION.md in root directory for full CLI commands for Android APK
               <Download className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-white">Native App Installation & Packaging Hub</h2>
+              <h2 className="text-lg font-bold text-white">Native App Installation & CI/CD Hub</h2>
               <p className="text-xs text-slate-400">
-                Step-by-step export instructions for Android (APK/AAB), iOS (PWA/IPA), Windows (.exe/.msi), and macOS (.dmg)
+                Packaging instructions for Android (APK/AAB), iOS (IPA), Windows (.exe/.msi), macOS (.dmg) & GitHub Actions
               </p>
             </div>
           </div>
@@ -62,6 +62,7 @@ Refer to INSTALLATION.md in root directory for full CLI commands for Android APK
             { id: 'windows', label: 'Windows (.exe / .msi)', icon: Monitor },
             { id: 'macos', label: 'macOS (.dmg)', icon: Apple },
             { id: 'pwa', label: 'Instant Web PWA', icon: ExternalLink },
+            { id: 'github-actions', label: 'GitHub Actions Matrix CI/CD', icon: Terminal },
           ].map(tab => {
             const Icon = tab.icon;
             const isSelected = activeTab === tab.id;
@@ -236,6 +237,94 @@ xcrun stapler staple KayBiT_Audiobooks.dmg`}</pre>
                 <span className="px-3 py-1 bg-cyan-600/20 text-cyan-400 border border-cyan-500/30 rounded font-mono text-xs">
                   PWA Ready
                 </span>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'github-actions' && (
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-sm font-bold text-white">Automated GitHub Actions CI/CD Matrix & Code Signing</h3>
+                  <p className="text-slate-400">Fires up 3 virtual environments simultaneously on release or push with base64 code signing.</p>
+                </div>
+                <span className="px-2 py-0.5 rounded font-mono text-[11px] bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                  Build #${'{github.run_number}'}
+                </span>
+              </div>
+
+              {/* 3 Runner Matrix Breakdown */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 space-y-1.5 font-mono text-[11px]">
+                  <div className="text-cyan-400 font-bold flex items-center gap-1.5">
+                    <Apple className="w-3.5 h-3.5" /> macos-latest
+                  </div>
+                  <p className="text-slate-400 text-[10px] font-sans">
+                    Compiles iOS <code className="text-white">.ipa</code> via Capacitor/Xcode, dual-architecture macOS <code className="text-white">.dmg</code> / <code className="text-white">.app</code> Universal Binaries, and publishes to TestFlight.
+                  </p>
+                </div>
+
+                <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 space-y-1.5 font-mono text-[11px]">
+                  <div className="text-amber-400 font-bold flex items-center gap-1.5">
+                    <Monitor className="w-3.5 h-3.5" /> windows-latest
+                  </div>
+                  <p className="text-slate-400 text-[10px] font-sans">
+                    Pulls Rust toolchains, WiX Toolset, and NSIS to generate Windows <code className="text-white">.exe</code> and <code className="text-white">.msi</code> installers with optional Authenticode signing.
+                  </p>
+                </div>
+
+                <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 space-y-1.5 font-mono text-[11px]">
+                  <div className="text-emerald-400 font-bold flex items-center gap-1.5">
+                    <Smartphone className="w-3.5 h-3.5" /> ubuntu-latest
+                  </div>
+                  <p className="text-slate-400 text-[10px] font-sans">
+                    Configures Android SDK/NDK, signs release <code className="text-white">.aab</code> and <code className="text-white">.apk</code>, compiles Linux <code className="text-white">.deb</code> / <code className="text-white">.AppImage</code> with PipeWire audio, and publishes to Google Play Internal.
+                  </p>
+                </div>
+              </div>
+
+              {/* Base64 Encoding Commands */}
+              <div className="space-y-2">
+                <span className="font-semibold text-slate-200 font-mono">Convert Secrets to Base64 (Never commit raw certificates):</span>
+                <div className="relative bg-slate-950 p-3 rounded-lg border border-slate-800 font-mono text-[11px] text-lime-300">
+                  <pre>{`# Bash (macOS/Linux):
+base64 -i my-release-key.jks | tr -d '\\n' > android_keystore_base64.txt
+base64 -i Certificates.p12 | tr -d '\\n' > ios_cert_base64.txt
+
+# PowerShell (Windows):
+[Convert]::ToBase64String([IO.File]::ReadAllBytes("my-release-key.jks")) | Out-File -Encoding ascii android_keystore_base64.txt`}</pre>
+                  <button
+                    onClick={() => copyToClipboard(`base64 -i my-release-key.jks | tr -d '\\n' > android_keystore_base64.txt\n[Convert]::ToBase64String([IO.File]::ReadAllBytes("my-release-key.jks")) | Out-File -Encoding ascii android_keystore_base64.txt`, 'base64-cmd')}
+                    className="absolute top-2 right-2 p-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded"
+                  >
+                    {copiedSnippet === 'base64-cmd' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                  </button>
+                </div>
+              </div>
+
+              {/* exportOptions.plist Reference */}
+              <div className="space-y-1.5">
+                <span className="font-semibold text-slate-200 font-mono">Dynamic exportOptions.plist Template (iOS App Store):</span>
+                <div className="bg-slate-950 p-3 rounded-lg border border-slate-800 font-mono text-[10px] text-cyan-300 overflow-x-auto max-h-36">
+                  <pre>{`<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>method</key><string>app-store</string>
+    <key>teamID</key><string>\${{ secrets.APPLE_TEAM_ID }}</string>
+    <key>signingStyle</key><string>manual</string>
+    <key>provisioningProfiles</key>
+    <dict>
+        <key>\${{ secrets.APPLE_BUNDLE_ID }}</key>
+        <string>\${{ secrets.APPLE_PROVISIONING_PROFILE_NAME }}</string>
+    </dict>
+</dict>
+</plist>`}</pre>
+                </div>
+              </div>
+
+              <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-between text-xs">
+                <span className="text-slate-400">Complete multiplatform workflow file saved to <code className="text-slate-200">GitHub_Actions.md</code> & <code className="text-slate-200">.github/workflows/build-and-release.yml</code>.</span>
               </div>
             </div>
           )}

@@ -9,6 +9,8 @@ interface HeroSplashScreenProps {
   onOpenUserGuide: (initialLang?: SupportedLanguageCode) => void;
   onOpenInstallation: () => void;
   onExploreMatrix: () => void;
+  onOpenThemeSettings?: () => void;
+  onOpenBrandAssets?: () => void;
 }
 
 export const HeroSplashScreen: React.FC<HeroSplashScreenProps> = ({
@@ -17,6 +19,8 @@ export const HeroSplashScreen: React.FC<HeroSplashScreenProps> = ({
   onOpenUserGuide,
   onOpenInstallation,
   onExploreMatrix,
+  onOpenThemeSettings,
+  onOpenBrandAssets,
 }) => {
   return (
     <div className="space-y-12">
@@ -39,7 +43,7 @@ export const HeroSplashScreen: React.FC<HeroSplashScreenProps> = ({
             Read and listen to uploaded/pasted PDFs with synchronized voice narration, adaptive bitrates, and ACID concurrency licensing across <strong>20+ programming languages</strong>.
           </p>
 
-          {/* Core Action Callouts (INCLUDING PLAYER & USER GUIDE ON SPLASH SCREEN) */}
+          {/* Core Action Callouts (INCLUDING PLAYER, USER GUIDE, THEMES, AND ICONS) */}
           <div className="flex flex-wrap items-center gap-3 pt-2">
             {/* Primary Launch PDF Player Button */}
             <button
@@ -58,6 +62,27 @@ export const HeroSplashScreen: React.FC<HeroSplashScreenProps> = ({
               <BookOpen className="w-4 h-4 fill-current" />
               <span>User Guide (22 Languages + TTS)</span>
             </button>
+
+            {/* Theme Settings Button */}
+            {onOpenThemeSettings && (
+              <button
+                onClick={onOpenThemeSettings}
+                className="flex items-center gap-2 px-4 py-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-amber-400 border border-amber-500/30 font-bold text-xs sm:text-sm shadow transition cursor-pointer"
+              >
+                <span>Theme Settings (5 UI Themes)</span>
+              </button>
+            )}
+
+            {/* Brand Logo & Icons Hub Button */}
+            {onOpenBrandAssets && (
+              <button
+                onClick={onOpenBrandAssets}
+                className="flex items-center gap-2 px-4 py-3.5 rounded-xl bg-lime-950/40 hover:bg-lime-900/50 text-lime-400 border border-lime-500/30 font-bold text-xs sm:text-sm shadow transition cursor-pointer"
+              >
+                <Shield className="w-4 h-4" />
+                <span>Brand Icons Hub</span>
+              </button>
+            )}
 
             {/* Installation Download Button */}
             <button

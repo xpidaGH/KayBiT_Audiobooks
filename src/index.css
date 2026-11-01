@@ -1,1 +1,223 @@
 @import "tailwindcss";
+
+@layer utilities {
+  .mask-squircle {
+    mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="black" d="M 0,50 C 0,4 4,0 50,0 C 96,0 100,4 100,50 C 100,96 96,100 50,100 C 4,100 0,96 0,50 Z"/></svg>');
+    mask-size: 100% 100%;
+    mask-repeat: no-repeat;
+    -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="black" d="M 0,50 C 0,4 4,0 50,0 C 96,0 100,4 100,50 C 100,96 96,100 50,100 C 4,100 0,96 0,50 Z"/></svg>');
+    -webkit-mask-size: 100% 100%;
+    -webkit-mask-repeat: no-repeat;
+  }
+}
+
+/* =========================================================================
+   KayBiT Dynamic UI Themes System (5 Distinct Themes)
+   ========================================================================= */
+
+:root,
+[data-theme="elegant_dark"] {
+  --theme-bg-root: #020617;
+  --theme-bg-surface: #0f172a;
+  --theme-bg-surface-elevated: #030712;
+  --theme-bg-card: rgba(15, 23, 42, 0.9);
+  --theme-border: #1e293b;
+  --theme-border-highlight: #334155;
+  --theme-text-primary: #f8fafc;
+  --theme-text-secondary: #cbd5e1;
+  --theme-text-muted: #94a3b8;
+  --theme-accent: #f59e0b;
+  --theme-accent-hover: #d97706;
+  --theme-accent-glow: rgba(245, 158, 11, 0.25);
+  --theme-accent-text: #020617;
+  --theme-font: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --theme-radius-card: 1rem;
+  --theme-radius-btn: 0.75rem;
+}
+
+[data-theme="editorial"] {
+  --theme-bg-root: #f7f4ed;
+  --theme-bg-surface: #ffffff;
+  --theme-bg-surface-elevated: #efeae0;
+  --theme-bg-card: #ffffff;
+  --theme-border: #ded7cb;
+  --theme-border-highlight: #c7beaf;
+  --theme-text-primary: #1c1917;
+  --theme-text-secondary: #44403c;
+  --theme-text-muted: #78716c;
+  --theme-accent: #9a3412;
+  --theme-accent-hover: #7c2d12;
+  --theme-accent-glow: rgba(154, 52, 18, 0.15);
+  --theme-accent-text: #ffffff;
+  --theme-font: 'Lora', Georgia, serif;
+  --theme-radius-card: 0.5rem;
+  --theme-radius-btn: 0.375rem;
+}
+
+[data-theme="technical"] {
+  --theme-bg-root: #0a0d14;
+  --theme-bg-surface: #101622;
+  --theme-bg-surface-elevated: #06090e;
+  --theme-bg-card: rgba(16, 22, 34, 0.95);
+  --theme-border: #1f2b3e;
+  --theme-border-highlight: #22c55e;
+  --theme-text-primary: #e2e8f0;
+  --theme-text-secondary: #94a3b8;
+  --theme-text-muted: #64748b;
+  --theme-accent: #22c55e;
+  --theme-accent-hover: #16a34a;
+  --theme-accent-glow: rgba(34, 197, 94, 0.3);
+  --theme-accent-text: #052e16;
+  --theme-font: 'JetBrains Mono', monospace;
+  --theme-radius-card: 0.25rem;
+  --theme-radius-btn: 0.25rem;
+}
+
+[data-theme="warm"] {
+  --theme-bg-root: #fff7ed;
+  --theme-bg-surface: #ffffff;
+  --theme-bg-surface-elevated: #ffedd5;
+  --theme-bg-card: rgba(255, 255, 255, 0.95);
+  --theme-border: #fed7aa;
+  --theme-border-highlight: #fdba74;
+  --theme-text-primary: #431407;
+  --theme-text-secondary: #7c2d12;
+  --theme-text-muted: #9a3412;
+  --theme-accent: #f97316;
+  --theme-accent-hover: #ea580c;
+  --theme-accent-glow: rgba(249, 115, 22, 0.25);
+  --theme-accent-text: #ffffff;
+  --theme-font: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --theme-radius-card: 1.5rem;
+  --theme-radius-btn: 9999px; /* pill button */
+}
+
+[data-theme="vibrant"] {
+  --theme-bg-root: #0f0728;
+  --theme-bg-surface: #1e0f45;
+  --theme-bg-surface-elevated: #09031a;
+  --theme-bg-card: rgba(30, 15, 69, 0.9);
+  --theme-border: #4c1d95;
+  --theme-border-highlight: #a855f7;
+  --theme-text-primary: #faf5ff;
+  --theme-text-secondary: #e9d5ff;
+  --theme-text-muted: #c084fc;
+  --theme-accent: #06b6d4;
+  --theme-accent-hover: #0891b2;
+  --theme-accent-glow: rgba(6, 182, 212, 0.4);
+  --theme-accent-text: #083344;
+  --theme-font: 'Space Grotesk', system-ui, sans-serif;
+  --theme-radius-card: 1.25rem;
+  --theme-radius-btn: 0.875rem;
+}
+
+/* Global Application Theme Bridge */
+body {
+  background-color: var(--theme-bg-root);
+  color: var(--theme-text-primary);
+  font-family: var(--theme-font);
+}
+
+.theme-root-container {
+  background-color: var(--theme-bg-root);
+  color: var(--theme-text-primary);
+  font-family: var(--theme-font);
+}
+
+/* Theme Adaptations for cards, headers, borders, surfaces */
+[data-theme="editorial"] .bg-slate-950,
+[data-theme="editorial"] .bg-slate-900,
+[data-theme="editorial"] .bg-slate-900\/90,
+[data-theme="editorial"] .bg-slate-900\/60 {
+  background-color: var(--theme-bg-surface) !important;
+  color: var(--theme-text-primary) !important;
+}
+
+[data-theme="editorial"] .border-slate-800,
+[data-theme="editorial"] .border-slate-800\/80,
+[data-theme="editorial"] .border-slate-700,
+[data-theme="editorial"] .border-slate-900 {
+  border-color: var(--theme-border) !important;
+}
+
+[data-theme="editorial"] .text-slate-100,
+[data-theme="editorial"] .text-white {
+  color: var(--theme-text-primary) !important;
+}
+
+[data-theme="editorial"] .text-slate-300,
+[data-theme="editorial"] .text-slate-400 {
+  color: var(--theme-text-secondary) !important;
+}
+
+[data-theme="editorial"] .text-slate-500,
+[data-theme="editorial"] .text-slate-600 {
+  color: var(--theme-text-muted) !important;
+}
+
+/* Technical Theme Overrides */
+[data-theme="technical"] .bg-slate-950 {
+  background-color: var(--theme-bg-surface-elevated) !important;
+}
+[data-theme="technical"] .bg-slate-900,
+[data-theme="technical"] .bg-slate-900\/90 {
+  background-color: var(--theme-bg-surface) !important;
+}
+[data-theme="technical"] .border-slate-800,
+[data-theme="technical"] .border-slate-700 {
+  border-color: var(--theme-border) !important;
+}
+[data-theme="technical"] button,
+[data-theme="technical"] input,
+[data-theme="technical"] select,
+[data-theme="technical"] pre {
+  font-family: 'JetBrains Mono', monospace !important;
+  border-radius: var(--theme-radius-btn) !important;
+}
+
+/* Warm & Approachable Overrides */
+[data-theme="warm"] .bg-slate-950,
+[data-theme="warm"] .bg-slate-900,
+[data-theme="warm"] .bg-slate-900\/90,
+[data-theme="warm"] .bg-slate-900\/60 {
+  background-color: var(--theme-bg-surface) !important;
+  color: var(--theme-text-primary) !important;
+}
+[data-theme="warm"] .border-slate-800,
+[data-theme="warm"] .border-slate-700,
+[data-theme="warm"] .border-slate-900 {
+  border-color: var(--theme-border) !important;
+}
+[data-theme="warm"] .text-white,
+[data-theme="warm"] .text-slate-100 {
+  color: var(--theme-text-primary) !important;
+}
+[data-theme="warm"] .text-slate-300,
+[data-theme="warm"] .text-slate-400 {
+  color: var(--theme-text-secondary) !important;
+}
+[data-theme="warm"] button {
+  border-radius: var(--theme-radius-btn) !important;
+}
+[data-theme="warm"] .rounded-xl,
+[data-theme="warm"] .rounded-2xl,
+[data-theme="warm"] .rounded-3xl {
+  border-radius: var(--theme-radius-card) !important;
+}
+
+/* Vibrant Palette Overrides */
+[data-theme="vibrant"] .bg-slate-950 {
+  background-color: var(--theme-bg-surface-elevated) !important;
+}
+[data-theme="vibrant"] .bg-slate-900,
+[data-theme="vibrant"] .bg-slate-900\/90 {
+  background-color: var(--theme-bg-surface) !important;
+}
+[data-theme="vibrant"] .border-slate-800,
+[data-theme="vibrant"] .border-slate-700 {
+  border-color: var(--theme-border) !important;
+}
+[data-theme="vibrant"] .text-slate-300,
+[data-theme="vibrant"] .text-slate-400 {
+  color: var(--theme-text-secondary) !important;
+}

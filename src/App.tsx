@@ -3,27 +3,40 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
 import { HeroSplashScreen } from './components/HeroSplashScreen';
 import { CapstoneDetail } from './components/CapstoneDetail';
 import { TechnologyMatrix } from './components/TechnologyMatrix';
 import { UserGuideModal } from './components/UserGuideModal';
 import { InstallationModal } from './components/InstallationModal';
+import { ThemeSettingsModal } from './components/ThemeSettingsModal';
+import { BrandAssetModal } from './components/brand/BrandAssetModal';
 import { AudiobookReader } from './components/player/AudiobookReader';
 import { CAPSTONE_PROJECTS } from './data/capstonesData';
 import { INITIAL_AUDIOBOOKS } from './data/sampleBooks';
 import { AudiobookBook, CapstoneId, SupportedLanguageCode } from './types';
-import { BookOpen, Download, ArrowLeft, Headphones } from 'lucide-react';
+import { ThemeId, getStoredTheme, applyTheme } from './types/theme';
+import { BookOpen, Download, ArrowLeft, Headphones, Palette, Shield } from 'lucide-react';
 
 export default function App() {
   const [activeView, setActiveView] = useState<'home' | 'player' | CapstoneId | 'matrix'>('player');
   const [audiobooks, setAudiobooks] = useState<AudiobookBook[]>(INITIAL_AUDIOBOOKS);
   const [currentBookId, setCurrentBookId] = useState<string>(INITIAL_AUDIOBOOKS[0].id);
 
+  // Modals & Navigation state
   const [isUserGuideOpen, setIsUserGuideOpen] = useState(false);
   const [userGuideLang, setUserGuideLang] = useState<SupportedLanguageCode>('en');
   const [isInstallationOpen, setIsInstallationOpen] = useState(false);
+  const [isThemeSettingsOpen, setIsThemeSettingsOpen] = useState(false);
+  const [isBrandAssetModalOpen, setIsBrandAssetModalOpen] = useState(false);
+
+  // Theme state (5 distinct themes stored in localStorage)
+  const [currentTheme, setCurrentTheme] = useState<ThemeId>(() => getStoredTheme());
+
+  useEffect(() => {
+    applyTheme(currentTheme);
+  }, [currentTheme]);
 
   const currentBook = audiobooks.find(b => b.id === currentBookId) || audiobooks[0];
   const selectedCapstoneProject = CAPSTONE_PROJECTS.find(p => p.id === activeView);
@@ -43,14 +56,21 @@ export default function App() {
     setActiveView('player');
   };
 
+  const handleThemeChange = (themeId: ThemeId) => {
+    setCurrentTheme(themeId);
+    applyTheme(themeId);
+  };
+
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-amber-500 selection:text-slate-950">
+    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-amber-500 selection:text-slate-950 theme-root-container transition-colors duration-200">
       {/* Top Navigation */}
       <Navbar
         activeView={activeView}
         onSelectView={view => setActiveView(view)}
         onOpenUserGuide={() => handleOpenUserGuide('en')}
         onOpenInstallation={() => setIsInstallationOpen(true)}
+        onOpenThemeSettings={() => setIsThemeSettingsOpen(true)}
+        onOpenBrandAssets={() => setIsBrandAssetModalOpen(true)}
       />
 
       {/* Main Container */}
@@ -86,6 +106,13 @@ export default function App() {
                 </button>
               )}
               <button
+                onClick={() => setIsThemeSettingsOpen(true)}
+                className="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white text-xs font-mono flex items-center gap-1.5 transition"
+                title="Theme Settings"
+              >
+                <Palette className="w-3.5 h-3.5 text-amber-400" /> Theme
+              </button>
+              <button
                 onClick={() => handleOpenUserGuide('en')}
                 className="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 hover:text-white text-xs font-mono flex items-center gap-1.5 transition"
               >
@@ -119,6 +146,8 @@ export default function App() {
             onOpenUserGuide={lang => handleOpenUserGuide(lang)}
             onOpenInstallation={() => setIsInstallationOpen(true)}
             onExploreMatrix={() => setActiveView('matrix')}
+            onOpenThemeSettings={() => setIsThemeSettingsOpen(true)}
+            onOpenBrandAssets={() => setIsBrandAssetModalOpen(true)}
           />
         )}
 
@@ -142,6 +171,20 @@ export default function App() {
 
           <div className="flex flex-wrap items-center gap-4 text-xs font-mono">
             <button
+              onClick={() => setIsThemeSettingsOpen(true)}
+              className="hover:text-amber-400 transition"
+            >
+              Theme Settings ({currentTheme})
+            </button>
+            <span>•</span>
+            <button
+              onClick={() => setIsBrandAssetModalOpen(true)}
+              className="hover:text-lime-400 transition"
+            >
+              Brand Icons Hub
+            </button>
+            <span>•</span>
+            <button
               onClick={() => handleOpenUserGuide('en')}
               className="hover:text-amber-400 transition"
             >
@@ -152,15 +195,34 @@ export default function App() {
               onClick={() => setIsInstallationOpen(true)}
               className="hover:text-cyan-400 transition"
             >
-              INSTALLATION.md (Android / iOS / Windows / Mac)
+              INSTALLATION.md
             </button>
             <span>•</span>
-            <span className="text-slate-600">v2.5 Full-Stack</span>
+            <a
+              href="https://github.com"
+              target="_blank"
+              rel="noreferrer"
+              className="hover:text-white transition"
+            >
+              GitHub_Actions.md
+            </a>
           </div>
         </div>
       </footer>
 
       {/* Modals */}
+      <ThemeSettingsModal
+        isOpen={isThemeSettingsOpen}
+        currentTheme={currentTheme}
+        onClose={() => setIsThemeSettingsOpen(false)}
+        onThemeSelect={handleThemeChange}
+      />
+
+      <BrandAssetModal
+        isOpen={isBrandAssetModalOpen}
+        onClose={() => setIsBrandAssetModalOpen(false)}
+      />
+
       <UserGuideModal
         isOpen={isUserGuideOpen}
         onClose={() => setIsUserGuideOpen(false)}
